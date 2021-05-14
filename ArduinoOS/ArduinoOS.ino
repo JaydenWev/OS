@@ -115,27 +115,11 @@ typedef struct {
   void * func ;
 } commandType ;
 
-static commandType command [] = { // All availlable commands
-//  {"ping" , &ping } ,
-//  {"pong" , &pong } ,
-//  {"store" , &store } ,
-//  {"retrieve" , &retrieve } ,
-//  {"erase" , &erase } ,
-//  {"files" , &files } ,
-//  {"freespace" , &freespace } ,
-//  {"run" , &runProgram } ,
-//  {"list" , &list } ,
-//  {"suspend" , &suspendProces } ,
-//  {"resume" , &resumeProces } ,
-//  {"kill" , &killProcess },
-//  {"ce" , &clearEEPROM },
-//  {"help" , &help }
 
-};
 
 void setup(){
   Serial.begin(9600);
-  Serial.println("ARDUINO READY!");
+  Serial.println("Starting...");
   sync();
 }
 
@@ -150,25 +134,6 @@ void loop (){
   }
 }
 
-// #########################################################
-// ##################   InputController   ##################
-// #########################################################
-
-
-String checkInput() {
-  storagenr = 0;
-  for (int n = 0; n <= 13; n++) {
-    if (strcmp(command[n].name, message) == 0 && message != "") {
-      void (*func)() = command[n].func;
-      func();
-      p = 0;
-      clearBuffers();
-      return;
-    }
-  }
-  Serial.println("command NOT recognised, type help for commands.");
-  clearBuffers();
-}
 
 
 void readInput() {
@@ -272,15 +237,65 @@ void sync () {                                               //syncs data from e
 void help() {
   delay(20);
   Serial.println("");
-  Serial.println("---- List of commands ----");
-  Serial.println("store\t\t\t#");
-  Serial.println("retrieve");
-  Serial.println("erase");
-  Serial.println("files");
-  Serial.println("freespace");
-  Serial.println("run [Program]");
-  Serial.println("list");
-  Serial.println("suspend [Process]");
-  Serial.println("resume [Process]");
-  Serial.println("kill [Process]");
+  Serial.println("■■■■■ List of command ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  Serial.println("■\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ store\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ retrieve\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ erase\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ files\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ freespace\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ run [Program]\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ list\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ suspend [Process]\t\t\t\t\t\t\t\t■");
+  Serial.println("■ resume [Process]\t\t\t\t\t\t\t\t■");
+  Serial.println("■ kill [Process]\t\t\t\t\t\t\t\t■");
+  Serial.println("■\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+}
+
+void ping() {
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  Serial.println("■ pong\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+}
+
+void pong() {
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  Serial.println("■ ping\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+}
+// #########################################################
+// ##################   InputController   ##################
+// #########################################################
+
+static commandType command [] = { // All availlable commands
+  {"ping" , &ping } ,
+  {"pong" , &pong } ,
+//  {"store" , &store } ,
+//  {"retrieve" , &retrieve } ,
+//  {"erase" , &erase } ,
+//  {"files" , &files } ,
+//  {"freespace" , &freespace } ,
+//  {"run" , &runProgram } ,
+//  {"list" , &list } ,
+//  {"suspend" , &suspendProces } ,
+//  {"resume" , &resumeProces } ,
+//  {"kill" , &killProcess },
+//  {"ce" , &clearEEPROM },
+  {"help" , &help }
+};
+
+String checkInput() {
+  storagenr = 0;
+  for (int n = 0; n <= 13; n++) {
+    if (strcmp(command[n].name, message) == 0 && message != "") {
+      void (*func)() = command[n].func;
+      func();
+      p = 0;
+      clearBuffers();
+      return;
+    }
+  }
+  Serial.println("command NOT recognised, type help for commands.");
+  clearBuffers();
 }
