@@ -1,0 +1,32 @@
+FAT table
+	bestandsnaam max 12 incl. terminating zero
+	Begin pos EEPROM
+	lengte
+2. Writing file
+3. Reading file
+4. Deleting file
+5. Listing files (file list)
+6. Available space
+
+Memory
+1. Memory table
+2. Saving variable
+3. Reading variable
+4. Deleting file
+
+Processes
+1. Process table
+2. Starting process
+3. Pausing process
+4. Resuming process
+5. Stopping process
+
+Stack
+1. Int/Float
+	push
+	pull
+2. String
+	Push
+	Pull
+
+Checkpoint 7
