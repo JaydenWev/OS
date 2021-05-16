@@ -128,7 +128,6 @@ void loop (){
   readInput();
   for (int i = 0; i < 10; i++ ) {     //voert per instructie uit voor ieder process dat runnend is
     if (processes[i].state == 'r') {
-
       execute(i);
     }
   }
@@ -214,7 +213,7 @@ void execute(int i) {
   }
 }
 
-void sync () {                                               //syncs data from eeprom with data from struct
+void sync () { //syncs data from eeprom with data from struct
   noOfFiles = 0;
   FAT fileS;
   int address = 0;
@@ -239,28 +238,26 @@ void help() {
   Serial.println("");
   Serial.println("■■■■■ List of command ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
   Serial.println("■\t\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ store\t\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ retrieve\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ erase\t\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ files\t\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ freespace\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ run [Program]\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ list\t\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ suspend [Process]\t\t\t\t\t\t\t\t■");
-  Serial.println("■ resume [Process]\t\t\t\t\t\t\t\t■");
-  Serial.println("■ kill [Process]\t\t\t\t\t\t\t\t■");
+  Serial.println("■ store\t\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ retrieve\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ erase\t\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ files\t\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ freespace\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ run [Program]\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ list\t\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ suspend [Process]\t*\t\t\t\t\t\t\t■");
+  Serial.println("■ resume [Process]\t*\t\t\t\t\t\t\t■");
+  Serial.println("■ kill [Process]\t*\t\t\t\t\t\t\t■");
   Serial.println("■\t\t\t\t\t\t\t\t\t\t■");
   Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 }
 
 void ping() {
-  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
   Serial.println("■ pong\t\t\t\t\t\t\t\t\t\t■");
   Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 }
 
 void pong() {
-  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
   Serial.println("■ ping\t\t\t\t\t\t\t\t\t\t■");
   Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 }
@@ -296,6 +293,8 @@ String checkInput() {
       return;
     }
   }
-  Serial.println("command NOT recognised, type help for commands.");
+  
+  Serial.println("■ command NOT recognised, type help for commands.\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
   clearBuffers();
 }
