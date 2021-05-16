@@ -1,5 +1,4 @@
 #include <EEPROM.h>
-#include "Arduino.h"
 
 #define STACKSIZE 32
 
@@ -10,43 +9,6 @@ byte noOfVars = 0;
 byte startpos = 0;
 int systemPid = 0;
 int localPid = 0;
-
-typedef struct {
-  byte name;
-  byte type;
-  byte address;
-  byte size;
-  int pid;
-} MEM;
-
-static MEM fileMem [] {           //memory table  voor een variable van een proces hier worden de gegevens opgeslagen voor de variablen die in de ram (memory) staan
-  {'a', '\0', '\0', 0, 0},        //name type address size pid
-  {'b', '\0', '\0', 0, 0},
-  {'c', '\0', '\0', 0, 0},
-  {'d', '\0', '\0', 0, 0},
-  {'e', '\0', '\0', 0, 0},
-  {'f', '\0', '\0', 0, 0},
-  {'g', '\0', '\0', 0, 0},
-  {'h', '\0', '\0', 0, 0},
-  {'i', '\0', '\0', 0, 0},
-  {'j', '\0', '\0', 0, 0},
-  {'k', '\0', '\0', 0, 0},    
-  {'l', '\0', '\0', 0, 0},
-  {'m', '\0', '\0', 0, 0},
-  {'n', '\0', '\0', 0, 0},
-  {'o', '\0', '\0', 0, 0},
-  {'p', '\0', '\0', 0, 0},
-  {'q', '\0', '\0', 0, 0},
-  {'r', '\0', '\0', 0, 0},
-  {'s', '\0', '\0', 0, 0},
-  {'t', '\0', '\0', 0, 0},
-  {'u', '\0', '\0', 0, 0},
-  {'v', '\0', '\0', 0, 0},
-  {'w', '\0', '\0', 0, 0},
-  {'x', '\0', '\0', 0, 0},
-  {'y', '\0', '\0', 0, 0},
-  {'z', '\0', '\0', 0, 0},        //25
-};
 
 typedef struct {
   char name [12];
@@ -110,19 +72,14 @@ static FAT file [] {
   {"empty", 0, 16},
 };
 
-typedef struct {
-  char name [ 16 ];
-  void * func ;
-} commandType ;
-
-
-
 void setup(){
   Serial.begin(9600);
-  Serial.println("Starting...");
+  Serial.println(" ");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  Serial.println("■ Starting...\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
   sync();
 }
-
 
 void loop (){
   readInput();
@@ -133,7 +90,19 @@ void loop (){
   }
 }
 
-
+void sync () { //syncs data from eeprom with data from struct
+  noOfFiles = 0;
+  FAT fileS;
+  int address = 0;
+  for (int t = 0; t < 10; t++) {
+    EEPROM.get(address, fileS);
+    file[t] = fileS;
+    if (strcmp(file[t].name, "empty")) {
+      noOfFiles++;
+    }
+    address += 16;
+  }
+}
 
 void readInput() {
   int availableBytes = Serial.available();
@@ -174,7 +143,6 @@ void readInput() {
   }
 }
 
-
 void clearBuffers() {
   p = 0;
   for (int l = 0; l <= 15; l++) {
@@ -189,19 +157,6 @@ void clearBuffers() {
 
 // #########################################################
 
-
-void pushByte ( byte b, int index ) {
-  processes[index].stack [ processes[index].sp++] = b ;
-}
-
-byte popByte (int index) {
-  return processes[index].stack [--processes[index].sp];
-}
-
-byte popByteString (int index, int n) {
-  return processes[index].stack [processes[index].sp - n - 1];
-}
-
 void execute(int i) {
   int  tempLocation = 0;
   int  tempIndex = 0;
@@ -212,23 +167,6 @@ void execute(int i) {
     EEPROM.get(file[i].startPos + x, byteArray[x]);
   }
 }
-
-void sync () { //syncs data from eeprom with data from struct
-  noOfFiles = 0;
-  FAT fileS;
-  int address = 0;
-  for (int t = 0; t < 10; t++) {
-    EEPROM.get(address, fileS);
-    file[t] = fileS;
-    if (strcmp(file[t].name, "empty")) {
-      noOfFiles++;
-      //Serial.println(noOfFiles);
-    }
-    address += 16;
-  }
-}
-
-
 // #########################################################
 // ##########              TestFunctions          ##########
 // #########################################################
@@ -238,11 +176,11 @@ void help() {
   Serial.println("");
   Serial.println("■■■■■ List of command ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
   Serial.println("■\t\t\t\t\t\t\t\t\t\t■");
-  Serial.println("■ store\t\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ store\t\t\t\t\t\t\t\t\t\t■");
   Serial.println("■ retrieve\t*\t\t\t\t\t\t\t\t■");
-  Serial.println("■ erase\t\t*\t\t\t\t\t\t\t\t■");
-  Serial.println("■ files\t\t*\t\t\t\t\t\t\t\t■");
-  Serial.println("■ freespace\t*\t\t\t\t\t\t\t\t■");
+  Serial.println("■ erase\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ files\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■ freespace\t\t\t\t\t\t\t\t\t■");
   Serial.println("■ run [Program]\t*\t\t\t\t\t\t\t\t■");
   Serial.println("■ list\t\t*\t\t\t\t\t\t\t\t■");
   Serial.println("■ suspend [Process]\t*\t\t\t\t\t\t\t■");
@@ -261,24 +199,36 @@ void pong() {
   Serial.println("■ ping\t\t\t\t\t\t\t\t\t\t■");
   Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
 }
+void numberOfFiles() {
+  Serial.print("■ ");
+  Serial.print(noOfFiles);
+  Serial.println("\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+}
 // #########################################################
 // ##################   InputController   ##################
 // #########################################################
 
+typedef struct {
+  char name [ 16 ];
+  void * func ;
+} commandType ;
+
 static commandType command [] = { // All availlable commands
   {"ping" , &ping } ,
   {"pong" , &pong } ,
-//  {"store" , &store } ,
-//  {"retrieve" , &retrieve } ,
-//  {"erase" , &erase } ,
-//  {"files" , &files } ,
-//  {"freespace" , &freespace } ,
+  {"store" , &store } ,
+  {"erase" , &erase } ,
+  {"retrieve" , &retrieve } ,
+  {"files" , &files } ,
+  {"freespace" , &freespace } ,
 //  {"run" , &runProgram } ,
 //  {"list" , &list } ,
 //  {"suspend" , &suspendProces } ,
 //  {"resume" , &resumeProces } ,
 //  {"kill" , &killProcess },
-//  {"ce" , &clearEEPROM },
+  {"ce" , &clearEEPROM },
+  {"no" , &numberOfFiles },
   {"help" , &help }
 };
 
@@ -293,8 +243,207 @@ String checkInput() {
       return;
     }
   }
-  
   Serial.println("■ command NOT recognised, type help for commands.\t\t\t\t■");
   Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
   clearBuffers();
+}
+
+void clearEEPROM () {
+  FAT fileN;
+  //clears the eeprom
+  Serial.println("■ please wait\t\t\t\t\t\t\t\t\t■");
+  for (int y = 0 ; y < EEPROM.length() ; y++) {
+    EEPROM.write(y, 0);
+  }
+  eeAddress = 0;
+
+  for (int y = 0 ; y < 11 ; y++) {
+    for (int s = 0; s < 12; s++) {
+      file[y].name[s] = empty[s];
+    }
+    file[y].startPos = 0;
+    file[y].fileLength = 16;
+    fileN = file[y];
+    EEPROM.put(eeAddress, fileN);
+    eeAddress += 16;
+  }
+  clearBuffers();
+  Serial.println("■ Cleared EEPROM\t\t\t\t\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  noOfFiles = 0;
+  customAddress = 0;
+}
+// #########################################################
+// ##################      Functions      ##################
+// #########################################################
+
+void store() { //opslaan van een bestand
+  if (message1[0] != '\0' && message2[0] != '\0') {
+    if (readFATEntry(message1) == -1) {
+      //Serial.println(atoi(message2));
+      writeFATEntryCustom(message1, atoi(message2), message3);
+      Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+    } else {
+      Serial.println("■ file name already exists\t\t\t\t\t\t\t■");
+      Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+    }
+  } else {
+    Serial.println("■ store [name] [size] [data]\t\t\t\t\t\t\t■");
+    Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  }
+}
+
+void erase () {       //haalt een waarde van de eeprom
+  if (message1[0] != '\0')
+    for (int y = 0; y < noOfFiles; y++) {
+      if (!strcmp(file[y].name, message1)) {      //wanneer de gegeven naam gelijk is aan een naam van de struct
+        Serial.println("■ ERASED\t\t\t\t\t\t\t\t\t■");
+        Serial.println(message1);
+        for (int s = 0; s < 12; s++) {
+          file[y].name[s] = empty[s];
+        }
+        file[y].startPos = 0;
+        file[y].fileLength = 16;
+        EEPROM.put(y * 16, file[y]);
+        sync();
+      }
+    }
+  else {
+    Serial.println("■ erase [fileName]\t\t\t\t\t\t\t\t■");
+    Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  }
+}
+
+void retrieve () {   //retrieved een bestand (werkt alleen niet op byte arrays dus de test programmas)                                            
+  if (message1[0] != '\0'){
+    Serial.print("■ file: ");
+    Serial.print(message1);
+    Serial.println(", contains:");
+    for (int s = 0; s < noOfFiles; s++) {
+      if (!strcmp(file[s].name, message1)) {      //wanneer de gegeven naam gelijk is aan een naam van de struct
+        clearBuffers();
+        EEPROM.get(file[s].startPos, message3);
+        Serial.print("■ ");
+        Serial.println(message3);
+        Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+      }
+    }
+  }
+  else{
+    Serial.println("■ retrieve [fileName]\t\t\t\t\t\t\t\t■");
+    Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+  }
+}
+
+void files () { //print de files die op de eeprom staan
+  Serial.print("■ files: \t");
+  Serial.print(noOfFiles);
+  Serial.println("\t\t\t\t\t\t\t\t■");
+  FAT fileX;
+  for (int s = 0; s < 10; s++) {
+    if (strcmp(file[s].name, "empty")) {
+      Serial.print("■ ");
+      Serial.print( file[s].name);
+      Serial.print("\tSize (byte): ");
+      Serial.print( file[s].fileLength);
+      Serial.print("\t");
+      Serial.println( file[s].startPos);
+    }
+  }
+  Serial.println("■\t\t\t\t\t\t\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+}
+
+void freespace () {     //print hoeveel ruimte er over is
+  int freespace = 1024 - 160;
+  for (int s = 9; s > 0; s--) {
+    //Serial.println(s);
+    if (strcmp(file[s].name, "empty")) {
+      freespace = freespace - file[s].fileLength;
+    }
+  }
+  Serial.print("■ ");
+  Serial.print(freespace);
+  Serial.println("(byte) available\t\t\t\t\t\t\t\t■");
+  Serial.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+}
+// #########################################################
+// ##################    HelpFunctions    ##################
+// #########################################################
+// 
+int designateMemFile () {                                           //returns location of empty file
+  for (int t = 0; t < 10; t++) {
+    if (!strcmp(file[t].name, "empty")) {
+      return t;
+    }
+  }
+  return 0;
+}
+
+int designateMemLoc (int fileSize) {                                            //returns location of empty space in EEprom
+  int locCounter = 160;
+  for (int t = 0; t < 10; t++) {
+    if (file[t].startPos == 0) { //dus wanneer de struct geen waarde bevat
+      if (t == 0) {                     //kijk dan of het de eerste is dan geef 160 mee
+        return 160;
+      } else if (file[t + 1].startPos - file[t - 1].fileLength - file[t - 1].startPos - fileSize  >= 0 || file[t + 1].startPos <= 160) {
+        return file[t - 1].startPos + file[t - 1].fileLength;
+      } else {
+        return 160;
+      }
+    }
+  }
+}
+
+void writeFATEntryCustom(char customName[], int customSize, char customData[]) {
+  Serial.print("■ Size: ");
+  Serial.print(customSize);
+  Serial.println("\t\t\t\t\t\t\t\t\t■");
+  Serial.print("■ Data: ");
+  Serial.print(customData);
+  Serial.println("\t\t\t\t\t\t\t\t■");
+  if (strlen(customData) <= customSize && strlen(customName) <= 12 && customSize <= 128 && customSize > 0) {
+    FAT fileC;
+    int emptyfileloc = designateMemFile();         //returned welk bestand nog empty is
+    int memloc = designateMemLoc(strlen(customName));            //returned locatie van eeprom waar geschreven kan worden
+    for (int c = 0; c < 11 ; c++)
+      file[emptyfileloc].name[c] = '\0';
+    for (int c = 0; c < strlen(customName) ; c++)
+      file[emptyfileloc].name[c] = customName[c];
+    file[emptyfileloc].startPos = memloc;
+    file[emptyfileloc].fileLength = customSize;
+
+    EEPROM.put(emptyfileloc * 16, file[emptyfileloc]);      //header file alloceren
+
+    for (int i = 0; i < strlen(customData); i++) {
+      EEPROM.put(memloc + i, customData[i]);
+      //Serial.println(customData[i]);
+    }
+    Serial.print("■ Name: ");
+    Serial.println(message1);
+    Serial.println("■ STORED\t\t\t\t\t\t\t\t\t■");
+    noOfFiles++;
+    clearBuffers();
+  } else {
+    Serial.println("■ Given size is smaller then given data\t\t\t\t\t\t■");
+    Serial.println("■ Or given name is bigger than 12\t\t\t\t\t\t■");
+    Serial.println("■ Or given size is bigger than 16\t\t\t\t\t\t■");
+  }
+}
+
+int readFATEntry(char givenName[]) {
+  FAT fileX;
+  Serial.println("\"");
+  for (int s = 0; s < noOfFiles; s++) {
+    EEPROM.get(AddressList, fileX);
+    if (strcmp(fileX.name, givenName)) {
+      AddressList += fileX.fileLength;
+    } else {
+      s = 21;
+      return fileX.startPos;
+    }
+  }
+  AddressList = 0;
+  return -1;
+  //return -1;
 }
