@@ -430,7 +430,7 @@ void execute(int i) {
 
 void help() {
   delay(20);
-  Serial.println("");
+  Serial.println();
   Serial.println(F("■■■■■ List of command ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■"));
   Serial.println(F("■\t\t\t\t\t\t\t\t\t\t■"));
   Serial.println(F("■ store\t\t\t\t\t\t\t\t\t\t■"));
@@ -449,15 +449,21 @@ void help() {
 }
 
 void ping() {
+  Serial.println();
+  Serial.println(screenBorder);
   Serial.println(F("■ pong\t\t\t\t\t\t\t\t\t\t■"));
   Serial.println(screenBorder);
 }
 
 void pong() {
+  Serial.println();
+  Serial.println(screenBorder);
   Serial.println(F("■ ping\t\t\t\t\t\t\t\t\t\t■"));
   Serial.println(screenBorder);
 }
 void numberOfFiles() {
+  Serial.println();
+  Serial.println(screenBorder);
   Serial.print(F("■ "));
   Serial.print(noOfFiles);
   Serial.println(F("\t\t\t\t\t\t\t\t\t\t■"));
@@ -504,7 +510,7 @@ void printE() {
       Serial.print(F("\t"));
     }
   }
-  Serial.println(F("\n■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■"));
+  Serial.println(screenBorder);
 }
 // #########################################################
 // ##################   InputController   ##################
@@ -546,6 +552,8 @@ String checkInput() {
       return;
     }
   }
+  Serial.println();
+  Serial.println(screenBorder);
   Serial.println(F("■ command NOT recognised, type help for commands.\t\t\t\t■"));
   Serial.println(screenBorder);
   clearBuffers();
@@ -560,23 +568,24 @@ void store () { //opslaan van een bestand
     if (readFATEntry(message1) == -1) {
       //Serial.println(atoi(message2));
       writeFATEntryCustom(message1, atoi(message2), message3);
-      Serial.println(screenBorder);
     } else {
       Serial.println(F("■ file name already exists\t\t\t\t\t\t\t■"));
-      Serial.println(screenBorder);
     }
   } else {
     Serial.println(F("■ store [name] [size] [data]\t\t\t\t\t\t\t■"));
-    Serial.println(screenBorder);
   }
+      Serial.println(screenBorder);
 }
 
 void erase () { //Get value from EEPROM
+  Serial.println();
+  Serial.println(screenBorder);
   if (message1[0] != '\0')
     for (int y = 0; y < noOfFiles; y++) {
       if (!strcmp(file[y].name, message1)) { // When given name is equal to the name in the struct
-        Serial.println(F("■ ERASED\t\t\t\t\t\t\t\t\t■"));
+        Serial.print(F("■ Erased: "));
         Serial.println(message1);
+        Serial.println(screenBorder);
         for (int s = 0; s < 12; s++) {
           file[y].name[s] = empty[s];
         }
@@ -584,6 +593,7 @@ void erase () { //Get value from EEPROM
         file[y].fileLength = 16;
         EEPROM.put(y * 16, file[y]);
         sync();
+        return;
       }
     }
   else {
@@ -593,6 +603,8 @@ void erase () { //Get value from EEPROM
 }
 
 void retrieve () {   // retrieved een bestand (werkt alleen niet op byte arrays dus de test programmas)
+  Serial.println();
+  Serial.println(screenBorder);
   if (message1[0] != '\0') {
     Serial.print(F("■ file: "));
     Serial.print(message1);
@@ -614,6 +626,8 @@ void retrieve () {   // retrieved een bestand (werkt alleen niet op byte arrays 
 }
 
 void files () { //print de files die op de eeprom staan
+  Serial.println();
+  Serial.println(screenBorder);
   Serial.print(F("■ files: \t"));
   Serial.print(noOfFiles);
   Serial.println(F("\t\t\t\t\t\t\t\t■"));
@@ -633,6 +647,8 @@ void files () { //print de files die op de eeprom staan
 }
 
 void list () {
+  Serial.println();
+  Serial.println(screenBorder);
   Serial.print(F("■ active processes: "));
   Serial.println(localPid);
   for (int index = 0; index < 10; index++) {
@@ -717,6 +733,8 @@ void runProgram () {
 }
 
 void suspendProces () {
+  Serial.println();
+  Serial.println(screenBorder);
   if (message1[0] == '\0' || message2[0] == '\0') {
     Serial.println(F("■ suspend [processName] [pid]\t\t\t\t\t\t\t■"));
     Serial.println(screenBorder);
@@ -744,6 +762,8 @@ void suspendProces () {
 }
 
 void resumeProces () {
+  Serial.println();
+  Serial.println(screenBorder);
   if (message2[0] == '\0') {
     Serial.println(F("■ suspend [processName] [pid]\t\t\t\t\t\t\t■"));
     return;
@@ -769,6 +789,8 @@ void resumeProces () {
 }
 
 void killProcess () {
+  Serial.println();
+  Serial.println(screenBorder);
   if (message2[0] == '\0') {
     Serial.println(F("■ suspend [processName] [pid]\t\t\t\t\t\t\t■"));
     Serial.println(screenBorder);
@@ -899,7 +921,6 @@ void eraseMemFiles(int givenPid, byte giveName) {
 
 // File allocation table functions
 void writeFATEntryCustom (char customName[], int customSize, char customData[]) {
-  Serial.println(customData);
   if (strlen(customData) <= customSize && strlen(customName) <= 12 && customSize <= 128 && customSize > 0) {
     FAT fileC;
     int emptyfileloc = designateMemFile(); // Returns which file is empty
@@ -922,6 +943,7 @@ void writeFATEntryCustom (char customName[], int customSize, char customData[]) 
     Serial.print(F("■ Size: "));
     Serial.println(customSize);
     Serial.print(F("■ Data: "));
+    Serial.println(customData);
     Serial.println(F("■ STORED\t\t\t\t\t\t\t\t\t■"));
     noOfFiles++;
     clearBuffers();
