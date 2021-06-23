@@ -1,5 +1,6 @@
 #include <EEPROM.h>
 #include "instruction_set.h"
+#include "test_programs.h"
 
 #define STACKSIZE 32
 
@@ -512,6 +513,26 @@ void printE() {
   }
   Serial.println(screenBorder);
 }
+
+void set_1(){
+  writeFATEntryCustomByte("prog1", sizeof(prog1), prog1);
+}
+
+void set_2(){
+  writeFATEntryCustomByte("prog2", sizeof(prog2), prog2);
+}
+
+void set_3(){
+  writeFATEntryCustomByte("prog3", sizeof(prog3), prog3);
+}
+
+void set_4(){
+  writeFATEntryCustomByte("prog4", sizeof(prog4), prog4);
+}
+
+void set_5(){
+  writeFATEntryCustomByte("prog5", sizeof(prog5), prog5);
+}
 // #########################################################
 // ##################   InputController   ##################
 // #########################################################
@@ -522,6 +543,11 @@ typedef struct {
 } commandType ;
 
 static commandType command [] = { // All commands
+  {"s1", &set_1 },
+  {"s2", &set_2 },
+  {"s3", &set_3 },
+  {"s4", &set_4 },
+  {"s5", &set_5 },
   {"ping" , &ping },
   {"pong" , &pong },
   {"store" , &store },
@@ -538,7 +564,7 @@ static commandType command [] = { // All commands
   {"ce" , &clearEEPROM },
   {"no" , &numberOfFiles },
   {"help", &help },
-  {"pe", &printE } // Print all EEprom values
+  {"pe", &printE }, // Print all EEprom values
 };
 
 String checkInput() {
