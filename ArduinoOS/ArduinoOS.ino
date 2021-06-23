@@ -662,7 +662,7 @@ void list () {
         Serial.println(F("Running"));
       else if (processes[index].state == 'p')
         Serial.println(F("Paused"));
-      else if (processes[index].state == '0')
+      else if (processes[index].state == 0)
         Serial.println(F("Terminated"));
       else {
         Serial.print(F("'"));
