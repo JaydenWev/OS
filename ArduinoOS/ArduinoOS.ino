@@ -338,133 +338,13 @@ void execute(int i) {
       Serial.println("INCREMENT");
       break;
     case DECREMENT:
-
-      break;
-    case PLUS:
-
-      break;
-    case MINUS:
-
-      break;
-    case TIMES:
-
-      break;
-    case DIVIDEDBY:
-
-      break;
-    case MODULUS:
-
-      break;
-    case UNARYMINUS:
-
-      break;
-    case EQUALS:
-
-      break;
-    case NOTEQUALS:
-
-      break;
-    case LESSTHAN:
-
-      break;
-    case LESSTHANOREQUALS:
-
-      break;
-    case GREATERTHAN:
-
-      break;
-    case GREATERTHANOREQUALS:
-
-      break;
-    case LOGICALAND:
-
-      break;
-    case LOGICALOR:
-
-      break;
-    case LOGICALXOR:
-
-      break;
-    case LOGICALNOT:
-
-      break;
-    case BITWISEAND:
-
-      break;
-    case BITWISEOR:
-
-      break;
-    case BITWISEXOR:
-
-      break;
-    case BITWISENOT:
-
-      break;
-    case TOCHAR:
-
-      break;
-    case TOINT:
-
-      break;
-    case TOFLOAT:
-
-      break;
-    case ROUND:
-
-      break;
-    case FLOOR:
-
-      break;
-    case CEIL:
-
-      break;
-    case MIN:
-
-      break;
-    case MAX:
-
-      break;
-    case ABS:
-
-      break;
-    case CONSTRAIN:
-
-      break;
-    case MAP:
-
-      break;
-    case POW:
-
-      break;
-    case SQ:
-
-      break;
-    case SQRT:
-
-      break;
-    case DELAY:
-
+      Serial.println("DECREMENT");
       break;
     case DELAYUNTIL:
       Serial.println("DELAYUNTIL");
       break;
     case MILLIS:
-
-      break;
-    case PINMODE:
-
-      break;
-    case ANALOGREAD:
-
-      break;
-    case ANALOGWRITE:
-
-      break;
-    case DIGITALREAD:
-
-      break;
-    case DIGITALWRITE:
-
+      Serial.println("MILLIS");
       break;
     case PRINT:
       char x;
@@ -493,7 +373,6 @@ void execute(int i) {
       Serial.println("");
       break;
     case PRINTLN:
-
       tempbyte = popByte(i);
       if (tempbyte == STRING) {
         tempbyte = popByte(i);
@@ -518,44 +397,8 @@ void execute(int i) {
       processes[i].sp = processes[i].sp - tempbyte - 1;
       Serial.println("");
       break;
-    case OPEN:
-
-      break;
-    case CLOSE:
-
-      break;
-    case WRITE:
-
-      break;
-    case READINT:
-
-      break;
-    case READCHAR:
-
-      break;
-    case READFLOAT:
-
-      break;
-    case READSTRING:
-
-      break;
-    case IF:
-
-      break;
-    case ELSE:
-
-      break;
-    case ENDIF:
-
-      break;
-    case WHILE:
-
-      break;
-    case ENDWHILE:
-
-      break;
     case LOOP:
-      Serial.println("LOoOP");
+      Serial.println("LOOP");
       break;
     case ENDLOOP:
       Serial.println("ENDLOOP");
@@ -577,14 +420,6 @@ void execute(int i) {
       for (int o = 0; o < STACKSIZE; o++) {       //kan wss weg
         processes[i].stack[ o ] = '\0';
       }
-      return;
-
-      break;
-    case FORK:
-
-      break;
-    case WAITUNTILDONE:
-
       break;
   }
   processes[i].pc++;
