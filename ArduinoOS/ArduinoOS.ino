@@ -371,7 +371,6 @@ void execute(int i) {
       }
 
       processes[i].sp = processes[i].sp - tempbyte - 1;
-      Serial.println("");
       break;
     case PRINTLN:
       tempbyte = popByte(i);
