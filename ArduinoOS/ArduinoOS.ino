@@ -124,6 +124,11 @@ void setup() {
   Serial.println(screenBorder);
   sync();
   help(); // Print available commands
+  //  writeFATEntryCustomByte("prog1", sizeof(prog1), prog1);
+  //  writeFATEntryCustomByte("prog2", sizeof(prog2), prog2);
+  //  writeFATEntryCustomByte("prog3", sizeof(prog3), prog3);
+  //  writeFATEntryCustomByte("prog4", sizeof(prog4), prog4);
+
 }
 
 void loop () {
@@ -270,7 +275,7 @@ void execute(int i) {
         tempbyte = popByte(i);
         tempLocation = designateeMemoryfileLoc(tempbyte);
         tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);//fileMem[t].name = givenName;//fileMem[t].pid = givenPid;
-        fileMem[tempIndex].size = 2;    //bij string eerst groote poppen
+        fileMem[tempIndex].size = 2;
         fileMem[tempIndex].type = INT;
         fileMem[tempIndex].address = tempLocation;
         memory[tempLocation + 1] =  tempbyte;
@@ -283,7 +288,7 @@ void execute(int i) {
         processes[i].pc++;
         tempLocation = designateeMemoryfileLoc(tempbyte);
         tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);//fileMem[t].name = givenName;//fileMem[t].pid = givenPid;
-        fileMem[tempIndex].size = 1;    //bij string eerst grote poppen
+        fileMem[tempIndex].size = 1;
         fileMem[tempIndex].type = CHAR;
         fileMem[tempIndex].address = tempLocation;
         memory[tempLocation] =  tempbyte;
@@ -295,7 +300,7 @@ void execute(int i) {
         tempbyte = popByte(i);
         tempLocation = designateeMemoryfileLoc(tempbyte);
         tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);//fileMem[t].name = givenName;//fileMem[t].pid = givenPid;
-        fileMem[tempIndex].size = 4;    //bij string eerst groote poppen
+        fileMem[tempIndex].size = 4;
         fileMem[tempIndex].type = FLOAT;
         fileMem[tempIndex].address = tempLocation;
         memory[tempLocation + 3] =  tempbyte;
@@ -306,7 +311,7 @@ void execute(int i) {
       break;
     case GET:
       processes[i].pc++;
-      tempbyte = byteArray[processes[i].pc];          //check name van variable die geset wordt
+      tempbyte = byteArray[processes[i].pc]; //check name van variable die geset wordt
       tempLocation = returnMemoryIndex(byteArray[processes[i].pc], processes[i].pid);
       tempIndex = returnFtIndex((char)byteArray[processes[i].pc], processes[i].pid);
       tempbyte = fileMem[tempIndex].type;
@@ -513,25 +518,6 @@ void printE() {
   Serial.println(screenBorder);
 }
 
-void set_1(){
-  writeFATEntryCustomByte("prog1", sizeof(prog1), prog1);
-}
-
-void set_2(){
-  writeFATEntryCustomByte("prog2", sizeof(prog2), prog2);
-}
-
-void set_3(){
-  writeFATEntryCustomByte("prog3", sizeof(prog3), prog3);
-}
-
-void set_4(){
-  writeFATEntryCustomByte("prog4", sizeof(prog4), prog4);
-}
-
-void set_5(){
-  writeFATEntryCustomByte("prog5", sizeof(prog5), prog5);
-}
 // #########################################################
 // ##################   InputController   ##################
 // #########################################################
@@ -542,13 +528,7 @@ typedef struct {
 } commandType ;
 
 static commandType command [] = { // All commands
-  {"s1", &set_1 },
-  {"s2", &set_2 },
-  {"s3", &set_3 },
-  {"s4", &set_4 },
-  {"s5", &set_5 },
-  {"ping" , &ping },
-  {"pong" , &pong },
+  {"help", &help },
   {"store" , &store },
   {"erase" , &erase },
   {"retrieve" , &retrieve },
@@ -562,7 +542,6 @@ static commandType command [] = { // All commands
   {"kill" , &killProcess},
   {"ce" , &clearEEPROM },
   {"no" , &numberOfFiles },
-  {"help", &help },
   {"pe", &printE }, // Print all EEprom values
 };
 
@@ -599,7 +578,7 @@ void store () { //opslaan van een bestand
   } else {
     Serial.println(F("■ store [name] [size] [data]\t\t\t\t\t\t\t■"));
   }
-      Serial.println(screenBorder);
+  Serial.println(screenBorder);
 }
 
 void erase () { //Get value from EEPROM
@@ -635,14 +614,17 @@ void retrieve () {   // retrieved een bestand (werkt alleen niet op byte arrays 
     Serial.print(message1);
     Serial.println(", contains:");
     for (int index = 0; index < noOfFiles; index++) {
-      if (!strcmp(file[index].name, message1)) {      //wanneer de gegeven naam gelijk is aan een naam van de struct
+      if (!strcmp(file[index].name, message1)) {
         clearBuffers();
         EEPROM.get(file[index].startPos, message3);
         Serial.print(F("■ "));
         Serial.println(message3);
         Serial.println(screenBorder);
+        return;
       }
     }
+    Serial.println(F("■ Filename not found"));
+    Serial.println(screenBorder);
   }
   else {
     Serial.println(F("■ retrieve [fileName]\t\t\t\t\t\t\t\t■"));
