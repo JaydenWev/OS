@@ -344,16 +344,16 @@ void execute(int i) {
 
       break;
     case INCREMENT:
-      Serial.println("INCREMENT");
+      //Serial.println("INCREMENT");
       break;
     case DECREMENT:
-      Serial.println("DECREMENT");
+      //Serial.println("DECREMENT");
       break;
     case DELAYUNTIL:
-      Serial.println("DELAYUNTIL");
+      //Serial.println("DELAYUNTIL");
       break;
     case MILLIS:
-      Serial.println("MILLIS");
+      //Serial.println("MILLIS");
       break;
     case PRINT:
       char x;
