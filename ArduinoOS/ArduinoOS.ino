@@ -803,6 +803,14 @@ void resumeProces () {
 void killProcess () {
   Serial.println();
   Serial.println(screenBorder);
+  if (!strcmp(message1, "all")) {
+    for (int t = 0; t < 10; t++) {
+      processes[t].state = '0';
+    }
+    Serial.println(F("■ All processes terminated"));
+    Serial.println(screenBorder);
+    return;
+  }
   if (message2[0] == '\0') {
     Serial.println(F("■ suspend [processName] [pid]\t\t\t\t\t\t\t■"));
     Serial.println(screenBorder);
@@ -815,8 +823,23 @@ void killProcess () {
       Serial.println(F(" already terminated"));
       Serial.println(screenBorder);
       return;
-    } else if (!strcmp(processes[t].name, message1 ) && processes[t].state != '0' && processes[t].pid == atoi(message2)) { // && processes[t].pid == message2[0]
-      processes[t].state = '0';      Serial.print(F("■ "));
+    } else if (!strcmp(processes[t].name, message1 ) && processes[t].state != '0' && processes[t].pid == atoi(message2)) {
+      erasePidFiles(processes[i].pid);
+      processes[t].state = 0;
+      processes[t].pid = 0;
+      processes[t].fp = 0;
+      processes[t].sp = 0;
+
+      localPid--;
+      processes[t].pc = 0;
+      processes[t].startPos = 0;
+      for (int o = 0; o < 12; o++)        //kan wss weg
+        processes[t].name[o] = '\0';
+
+      for (int o = 0; o < STACKSIZE; o++) {       //kan wss weg
+        processes[t].stack[ o ] = '\0';
+      }
+      Serial.print(F("■ "));
       Serial.print(message1);
       Serial.println(F(" terminated"));
       Serial.println(screenBorder);
