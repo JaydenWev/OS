@@ -5,12 +5,12 @@
 #define STACKSIZE 32
 
 byte stack [ STACKSIZE ];       // Stack
-byte sp = 0;                    // Stack position
 byte memory[256];               //RAM - werkgeheugen
 byte noOfVars = 0;
-byte startpos = 0;
 int systemPid = 0;
 int localPid = 0;
+byte sp = 0;
+byte startpos = 0;
 
 String screenBorder = "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■";
 
@@ -262,7 +262,7 @@ void execute(int i) {
         processes[i].pc++;
         tempbyte = popByte(i);
         tempLocation = designateeMemoryfileLoc(tempbyte);
-        tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid); //fileMem[t].name = givenName;//fileMem[t].pid = givenPid;
+        tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);
         fileMem[tempIndex].size = tempbyte;
         fileMem[tempIndex].type = STRING;
         fileMem[tempIndex].address = tempLocation;
@@ -274,7 +274,7 @@ void execute(int i) {
         processes[i].pc++;
         tempbyte = popByte(i);
         tempLocation = designateeMemoryfileLoc(tempbyte);
-        tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);//fileMem[t].name = givenName;//fileMem[t].pid = givenPid;
+        tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);
         fileMem[tempIndex].size = 2;
         fileMem[tempIndex].type = INT;
         fileMem[tempIndex].address = tempLocation;
@@ -287,7 +287,7 @@ void execute(int i) {
         tempbyte = popByte(i);
         processes[i].pc++;
         tempLocation = designateeMemoryfileLoc(tempbyte);
-        tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);//fileMem[t].name = givenName;//fileMem[t].pid = givenPid;
+        tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);
         fileMem[tempIndex].size = 1;
         fileMem[tempIndex].type = CHAR;
         fileMem[tempIndex].address = tempLocation;
@@ -299,7 +299,7 @@ void execute(int i) {
         processes[i].pc++;
         tempbyte = popByte(i);
         tempLocation = designateeMemoryfileLoc(tempbyte);
-        tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);//fileMem[t].name = givenName;//fileMem[t].pid = givenPid;
+        tempIndex = designateMemoryfileNr (byteArray[processes[i].pc], processes[i].pid);
         fileMem[tempIndex].size = 4;
         fileMem[tempIndex].type = FLOAT;
         fileMem[tempIndex].address = tempLocation;
@@ -311,13 +311,13 @@ void execute(int i) {
       break;
     case GET:
       processes[i].pc++;
-      tempbyte = byteArray[processes[i].pc]; //check name van variable die geset wordt
+      tempbyte = byteArray[processes[i].pc];
       tempLocation = returnMemoryIndex(byteArray[processes[i].pc], processes[i].pid);
       tempIndex = returnFtIndex((char)byteArray[processes[i].pc], processes[i].pid);
       tempbyte = fileMem[tempIndex].type;
       //tempbyte bevat het type
 
-      if (tempbyte == STRING) {    //aanpassen
+      if (tempbyte == STRING) { //
 
         for (int l = 0; l < fileMem[tempIndex].size; l++ ) {
           pushByte(memory[fileMem[tempIndex].address + l + 1], i);
@@ -773,6 +773,7 @@ void resumeProces () {
   Serial.println(screenBorder);
   if (message2[0] == '\0') {
     Serial.println(F("■ suspend [processName] [pid]\t\t\t\t\t\t\t■"));
+    Serial.println(screenBorder);
     return;
   }
   for (int t = 0; t < 10; t++) {
@@ -786,12 +787,12 @@ void resumeProces () {
       processes[t].state = 'r';
       Serial.print(F("■ "));
       Serial.print(message1);
-      Serial.println(F(" terminated"));
+      Serial.println(F(" Resumed"));
       Serial.println(screenBorder);
       return;
     }
   }
-  Serial.println(F("name or pid combination not extitent"));
+  Serial.println(F("name and pid combination not extitent"));
   return;
 }
 
@@ -813,7 +814,7 @@ void killProcess () {
     } else if (!strcmp(processes[t].name, message1 ) && processes[t].state != '0' && processes[t].pid == atoi(message2)) { // && processes[t].pid == message2[0]
       processes[t].state = '0';      Serial.print(F("■ "));
       Serial.print(message1);
-      Serial.println(F(" resumed"));
+      Serial.println(F(" terminated"));
       Serial.println(screenBorder);
       erasePidFiles(processes[t].pid);
       return;
@@ -833,7 +834,7 @@ int designateeMemoryfileLoc (int fileSize) {                                    
   int locCounter = 0;
   for (int t = 0; t < 25; t++) {
     //Serial.println(file[t + 1].startPos - memory[t - 1].fileLength - memory[t - 1].startPos - fileSize);
-    if (fileMem[t].pid == '\0') { //dus wanneer de struct geen waarde bevat
+    if (fileMem[t].pid == '\0') { // Is empty
       if (fileMem[t + 1].address - fileMem[t - 1].size - fileMem[t - 1].address - fileSize  >= 0 || fileMem[t + 1].address == '\0') {
         return fileMem[t - 1].address + fileMem[t - 1].size;
       }
