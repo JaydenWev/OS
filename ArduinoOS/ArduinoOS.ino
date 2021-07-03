@@ -96,6 +96,7 @@ typedef struct {
   char state;
   byte pc;
   byte sp;
+  byte lp;
   byte fp;
   int pid;
   int startPos;
@@ -104,16 +105,16 @@ typedef struct {
 
 static ProcessTable processes [] {
   // name, state, pc, sp, fp, pid, startPos
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
-  {"", 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
+  {"", 0, 0, 0, 0, 0, 0, 0},
 };
 
 void setup() {
@@ -123,11 +124,12 @@ void setup() {
   Serial.println(F("■ Starting...\t\t\t\t\t\t\t\t\t■"));
   Serial.println(screenBorder);
   sync();
-  help(); // Print available commands
-  //  writeFATEntryCustomByte("prog1", sizeof(prog1), prog1);
-  //  writeFATEntryCustomByte("prog2", sizeof(prog2), prog2);
-  //  writeFATEntryCustomByte("prog3", sizeof(prog3), prog3);
-  //  writeFATEntryCustomByte("prog4", sizeof(prog4), prog4);
+  //  help(); // Print available commands
+  //   writeFATEntryCustomByte("prog1", sizeof(prog1), prog1);
+  //   writeFATEntryCustomByte("prog2", sizeof(prog2), prog2);
+  //   writeFATEntryCustomByte("prog3", sizeof(prog3), prog3);
+  //   writeFATEntryCustomByte("prog4", sizeof(prog4), prog4);
+  //   writeFATEntryCustomByte("loopt", sizeof(loopt), loopt);
 
 }
 
@@ -138,6 +140,7 @@ void loop () {
       execute(i);
     }
   }
+  delay(100);
 }
 
 void sync () { // Syncs data from eeprom with data from struct
@@ -403,10 +406,11 @@ void execute(int i) {
       Serial.println("");
       break;
     case LOOP:
-      Serial.println("LOOP");
+      processes[i].lp = processes[i].pc;
       break;
     case ENDLOOP:
-      Serial.println("ENDLOOP");
+      processes[i].pc = processes[i].lp;
+      processes[i].state = 'r';
       break;
     case STOP:
 
