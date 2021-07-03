@@ -539,6 +539,7 @@ static commandType command [] = { // All commands
   {"run" , &runProgram },
   {"list" , &list },
   {"suspend" , &suspendProces },
+  {"sus" , &susProces },
   {"resume" , &resumeProces },
   {"kill" , &killProcess},
   {"ce" , &clearEEPROM },
@@ -778,6 +779,35 @@ void suspendProces () {
       processes[t].state = 'p';
       Serial.print(F("■ "));
       Serial.print(message1);
+      Serial.println(F(" suspended"));
+      Serial.println(screenBorder);
+      return;
+    }
+  }
+  Serial.println(F("■ Name or pid combination non existent\t\t\t\t\t\t■"));
+  Serial.println(screenBorder);
+  return;
+}
+
+void susProces () {
+  Serial.println();
+  Serial.println(screenBorder);
+  if (message1[0] == '\0') {
+    Serial.println(F("■ sus [pid]\t\t\t\t\t\t\t\t\t■"));
+    Serial.println(screenBorder);
+    return;
+  }
+  for (int t = 0; t < sizeof(processes); t++) { // For every item in processes
+    if (processes[t].state == 'p' && processes[t].pid == atoi(message1)) {
+      Serial.print(F("■ "));
+      Serial.print(processes[t].name);
+      Serial.println(F(" already suspended"));
+      Serial.println(screenBorder);
+      return;
+    } else if (processes[t].state == 'r' && processes[t].pid == atoi(message1)) {
+      processes[t].state = 'p';
+      Serial.print(F("■ "));
+      Serial.print(processes[t].name);
       Serial.println(F(" suspended"));
       Serial.println(screenBorder);
       return;
