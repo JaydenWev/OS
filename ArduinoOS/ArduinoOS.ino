@@ -404,10 +404,10 @@ void execute(int i) {
       Serial.println("");
       break;
     case LOOP:
-      processes[i].lp = processes[i].pc;
+      //processes[i].lp = processes[i].pc;
       break;
     case ENDLOOP:
-      processes[i].pc = processes[i].lp;
+      //processes[i].pc = processes[i].lp;
       processes[i].state = 'r';
       break;
     case STOP:
@@ -927,7 +927,6 @@ byte popByte (int index) {
 byte popByteString (int index, int n) {
   return processes[index].stack [processes[index].sp - n - 1];
 }
-
 
 int designateMemFile () { //returns location of empty file
   for (int t = 0; t < 10; t++) {
