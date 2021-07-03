@@ -658,30 +658,48 @@ void files () { //print de files die op de eeprom staan
 }
 
 void list () {
+  if (message1[0] != '\0' ) {
+    Serial.print(F("■ "));
+    Serial.print(message1);
+    Serial.print(F("\t"));
+    Serial.print( processes[atoi(message1)].name);
+    Serial.print(F("\t pid: "));
+    Serial.print( processes[atoi(message1)].pid);
+    Serial.print(F("\t state: "));
+    //      Serial.println(processes[index].state);
+    if (processes[atoi(message1)].state == 'r')
+      Serial.println(F("Running"));
+    else if (processes[atoi(message1)].state == 'p')
+      Serial.println(F("Paused"));
+    else if (processes[atoi(message1)].state == '0')
+      Serial.println(F("Terminated"));
+    else {
+      Serial.println(F("."));
+    }
+    return;
+  }
   Serial.println();
   Serial.println(screenBorder);
   Serial.print(F("■ active processes: "));
   Serial.println(localPid);
   for (int index = 0; index < 10; index++) {
-    if (strcmp(processes[index].name, "")) {
-      Serial.print(F("■ |\t"));
-      Serial.print( processes[index].name);
-      Serial.print(F("\t pid: "));
-      Serial.print( processes[index].pid);
-      Serial.print(F("\t state: "));
-      //      Serial.println(processes[index].state);
-      if (processes[index].state == 'r')
-        Serial.println(F("Running"));
-      else if (processes[index].state == 'p')
-        Serial.println(F("Paused"));
-      else if (processes[index].state == '0')
-        Serial.println(F("Terminated"));
-      else {
-        Serial.print(F("'error:"));
-        Serial.print(processes[index].state);
-        Serial.println(F("'"));
+    //if (strcmp(processes[index].name, "")) {
+    Serial.print(F("■ |\t"));
+    Serial.print( processes[index].name);
+    Serial.print(F("\t pid: "));
+    Serial.print( processes[index].pid);
+    Serial.print(F("\t state: "));
+    //      Serial.println(processes[index].state);
+    if (processes[index].state == 'r')
+      Serial.println(F("Running"));
+    else if (processes[index].state == 'p')
+      Serial.println(F("Paused"));
+    else if (processes[index].state == '0')
+      Serial.println(F("Terminated"));
+    else {
+      Serial.println(F("."));
       }
-    }
+    //}
   }
   Serial.println(screenBorder);
 }
