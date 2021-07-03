@@ -669,14 +669,15 @@ void list () {
       Serial.print(F("\t pid: "));
       Serial.print( processes[index].pid);
       Serial.print(F("\t state: "));
+      //      Serial.println(processes[index].state);
       if (processes[index].state == 'r')
         Serial.println(F("Running"));
       else if (processes[index].state == 'p')
         Serial.println(F("Paused"));
-      else if (processes[index].state == 0)
+      else if (processes[index].state == '0')
         Serial.println(F("Terminated"));
       else {
-        Serial.print(F("'"));
+        Serial.print(F("'error:"));
         Serial.print(processes[index].state);
         Serial.println(F("'"));
       }
