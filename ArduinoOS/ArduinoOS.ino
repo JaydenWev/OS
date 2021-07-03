@@ -951,6 +951,7 @@ void eraseMemFiles(int givenPid, byte giveName) {
 
       noOfVars--;
       erasePidFiles(givenPid);
+      return;
     }
   }
 }
