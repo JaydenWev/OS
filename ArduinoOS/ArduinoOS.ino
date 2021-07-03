@@ -125,12 +125,11 @@ void setup() {
   Serial.println(screenBorder);
   sync();
   //  help(); // Print available commands
-  //   writeFATEntryCustomByte("prog1", sizeof(prog1), prog1);
-  //   writeFATEntryCustomByte("prog2", sizeof(prog2), prog2);
-  //   writeFATEntryCustomByte("prog3", sizeof(prog3), prog3);
-  //   writeFATEntryCustomByte("prog4", sizeof(prog4), prog4);
-  //   writeFATEntryCustomByte("loopt", sizeof(loopt), loopt);
-
+  //writeFATEntryCustomByte("prog1", sizeof(prog1), prog1);
+  //writeFATEntryCustomByte("prog2", sizeof(prog2), prog2);
+  //writeFATEntryCustomByte("prog3", sizeof(prog3), prog3);
+  //writeFATEntryCustomByte("prog4", sizeof(prog4), prog4);
+  //writeFATEntryCustomByte("loopt", sizeof(loopt), loopt);
 }
 
 void loop () {
@@ -140,7 +139,6 @@ void loop () {
       execute(i);
     }
   }
-  delay(100);
 }
 
 void sync () { // Syncs data from eeprom with data from struct
@@ -413,7 +411,6 @@ void execute(int i) {
       processes[i].state = 'r';
       break;
     case STOP:
-
       erasePidFiles(processes[i].pid);
       processes[i].state = 0;
       processes[i].pid = 0;
@@ -815,7 +812,7 @@ void resumeProces () {
       return;
     }
   }
-  Serial.println(F("name and pid combination not extitent"));
+  Serial.println(F("■ name and pid combination not extitent"));
   return;
 }
 
@@ -1061,7 +1058,6 @@ void writeFATEntryCustomByte(char customName[], int customSize, byte customData[
   EEPROM.put(emptyfileloc * 16, file[emptyfileloc]);      // Allocate header file
   for (int i = 0; i < customSize; i++ )
     EEPROM.put(memloc + i, customData[i]);
-  //put data
   //
   noOfFiles++;
 }
