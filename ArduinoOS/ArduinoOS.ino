@@ -118,7 +118,7 @@ static ProcessTable processes [] {
 };
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println(F(" "));
   Serial.println(screenBorder);
   Serial.println(F("■ Starting...\t\t\t\t\t\t\t\t\t■"));
@@ -671,15 +671,14 @@ void list () {
       Serial.println(F("Paused"));
     else if (processes[atoi(message1)].state == '0')
       Serial.println(F("Terminated"));
-    else {
+    else
       Serial.println(F("."));
-    }
     return;
   }
   Serial.println();
   Serial.println(screenBorder);
-  Serial.print(F("■ active processes: "));
-  Serial.println(localPid);
+  //Serial.print(F("■ active processes: "));
+  //Serial.println(localPid);
   for (int index = 0; index < 10; index++) {
     //if (strcmp(processes[index].name, "")) {
     Serial.print(F("■ |\t"));
@@ -694,9 +693,8 @@ void list () {
       Serial.println(F("Paused"));
     else if (processes[index].state == '0')
       Serial.println(F("Terminated"));
-    else {
-      Serial.println(F("."));
-      }
+    else
+      Serial.println(processes[index].state == '0');
     //}
   }
   Serial.println(screenBorder);
