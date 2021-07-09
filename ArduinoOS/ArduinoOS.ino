@@ -848,8 +848,15 @@ void killProcess () {
   Serial.println();
   Serial.println(screenBorder);
   if (!strcmp(message1, "all")) {
-    for (int t = 0; t < 10; t++) {
-      processes[t].state = '0';
+    for (int h = 0; h < 10; h++) {
+      processes[h].state = '0';
+      processes[h].startPos = 0;
+      processes[h].pc = 0;
+      processes[h].sp = 0;
+      processes[h].fp = 0;
+      processes[h].pid = 0;
+      for (int o = 0; o < 12; o++)        //kan wss weg
+        processes[h].name[o] = '\0';
     }
     Serial.println(F("■ All processes terminated"));
     Serial.println(screenBorder);
