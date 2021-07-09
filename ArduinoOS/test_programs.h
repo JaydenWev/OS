@@ -1,8 +1,11 @@
 // program hello
 
-byte prog1[] = {STRING, 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '\n', 0,
+byte loopt[] = {STRING, 't', 'e', 's', 't', 0,
                 PRINT,
-                STOP
+               };
+
+byte prog1[] = {STRING, 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '\n', 0,
+                PRINTLN,
                };
 
 byte prog2[] = {STRING, 'p', 'a', 's', 's', 'e', 'd', 0, SET, 's',
@@ -16,7 +19,6 @@ byte prog2[] = {STRING, 'p', 'a', 's', 's', 'e', 'd', 0, SET, 's',
                 STOP
                };
 
-// program test_loop
 byte prog3[] = {INT, 0, 50, SET, 'i',
                 LOOP,
                 GET, 'i', INCREMENT, SET, 'i',
