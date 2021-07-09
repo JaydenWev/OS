@@ -761,25 +761,43 @@ void runProgram () {
 void suspendProces () {
   Serial.println();
   Serial.println(screenBorder);
-  if (message1[0] == '\0' || message2[0] == '\0') {
+  if (message2[0] == '\0') {
+    for (int t = 0; t < sizeof(processes); t++) { // For every item in processes
+      if (!strcmp(processes[t].name, message1 ) && processes[t].state == 'p') {
+        Serial.print(F("■ "));
+        Serial.print(message1);
+        Serial.println(F(" already suspended"));
+        Serial.println(screenBorder);
+        return;
+      } else if (!strcmp(processes[t].name, message1 ) && processes[t].state == 'r') { // && processes[t].pid == message2[0]
+        processes[t].state = 'p';
+        Serial.print(F("■ "));
+        Serial.print(message1);
+        Serial.println(F(" suspended"));
+        Serial.println(screenBorder);
+        return;
+      }
+    }
+  } else if (message1[0] == '\0' || message2[0] == '\0') {
     Serial.println(F("■ suspend [processName] [pid]\t\t\t\t\t\t\t■"));
     Serial.println(screenBorder);
     return;
-  }
-  for (int t = 0; t < sizeof(processes); t++) { // For every item in processes
-    if (!strcmp(processes[t].name, message1 ) && processes[t].state == 'p' && processes[t].pid == atoi(message2)) {
-      Serial.print(F("■ "));
-      Serial.print(message1);
-      Serial.println(F(" already suspended"));
-      Serial.println(screenBorder);
-      return;
-    } else if (!strcmp(processes[t].name, message1 ) && processes[t].state == 'r' && processes[t].pid == atoi(message2)) { // && processes[t].pid == message2[0]
-      processes[t].state = 'p';
-      Serial.print(F("■ "));
-      Serial.print(message1);
-      Serial.println(F(" suspended"));
-      Serial.println(screenBorder);
-      return;
+  } else {
+    for (int t = 0; t < sizeof(processes); t++) { // For every item in processes
+      if (!strcmp(processes[t].name, message1 ) && processes[t].state == 'p' && processes[t].pid == atoi(message2)) {
+        Serial.print(F("■ "));
+        Serial.print(message1);
+        Serial.println(F(" already suspended"));
+        Serial.println(screenBorder);
+        return;
+      } else if (!strcmp(processes[t].name, message1 ) && processes[t].state == 'r' && processes[t].pid == atoi(message2)) { // && processes[t].pid == message2[0]
+        processes[t].state = 'p';
+        Serial.print(F("■ "));
+        Serial.print(message1);
+        Serial.println(F(" suspended"));
+        Serial.println(screenBorder);
+        return;
+      }
     }
   }
   Serial.println(F("■ Name or pid combination non existent\t\t\t\t\t\t■"));
