@@ -1,21 +1,17 @@
 // program hello
 
 byte loopt[] = {STRING, 't', 'e', 's', 't', 0,
-                PRINT,
+                LOOP,
+                PRINTLN,
+                ENDLOOP
                };
 
 byte prog1[] = {STRING, 'h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '\n', 0,
                 PRINTLN,
                };
 
-byte prog2[] = {STRING, 'p', 'a', 's', 's', 'e', 'd', 0, SET, 's',
-                CHAR, 'a', SET, 'c',
-                INT, 'l', 7, SET, 'i', // 263
-                FLOAT, 66, 246, 230, 102, SET, 'f', //123.45
-                GET, 's', PRINTLN,
-                GET, 'c', PRINTLN,
-                GET, 'i', PRINTLN,
-                GET, 'f', PRINTLN,
+byte prog2[] = {STRING, 'w', 'o', 'r', 'l', 'd', '\n', 0,
+                PRINTLN,
                 STOP
                };
 
